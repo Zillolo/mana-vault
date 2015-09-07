@@ -22,7 +22,8 @@ class User(db.Document):
     # Email
     email = db.EmailField(required = True)
 
-    authLevel = AuthLevel.USER
+    # Authentication-level
+    authLevel = db.IntField(required = True)
 
     meta = {
         'allow_inheritance' : True,
