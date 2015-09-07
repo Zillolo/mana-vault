@@ -1,0 +1,14 @@
+{% from "helper.html" import renderField %}
+{% extends "layout.html" %}
+
+{% block content %}
+<form method="post" action="{{ url_for('budget.editBudget') }}">
+  <dl>
+    {% for category in categories %}
+      {{ category.name }}
+      <input type="range" step="1" min="0" max="100" name="{{ category['name'] }}" value="50">
+    {% endfor %}
+  </dl>
+  <p><input type="submit" value="Edit">
+</form>
+{% endblock %}

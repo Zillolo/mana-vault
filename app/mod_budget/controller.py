@@ -1,10 +1,10 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
-
+from wtforms.fields.html5 import DecimalRangeField
 from bson.objectid import ObjectId
 
 from app import logger
-from app.mod_budget.form import AddEntryForm
-from app.mod_budget.model import Category, Entry, loadCategories
+from app.mod_budget.form import AddEntryForm, EditBudgetForm
+from app.mod_budget.model import Category, CategoryBudget, Entry, loadCategories, sumEntries
 
 from app.mod_auth.helper import requireAuth
 
@@ -35,3 +35,7 @@ def addEntry():
         flash('Your entry has been added.')
         return redirect(url_for('budget.default'))
     return render_template('budget/entry/add.html', form = form)
+
+@budget.route('/edit', methods = ['GET', 'POST'])
+@requireAuth()
+def editBudget():

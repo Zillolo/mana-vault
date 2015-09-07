@@ -14,11 +14,21 @@ class Entry(db.Document):
 
     # The owner of the entry.
     # Should the owner be deleted, we also want to delete all of his entries.
-    owner = db.ReferenceField(User, reverse_delete_rule = db.CASCADE)
+    owner = db.ReferenceField(User, reverse_delete_rule = db.CASCADE, required = True)
 
     # The category of this entry.
-    category = db.ReferenceField(Category)
+    category = db.ReferenceField(Category, required = True)
+
+class CategoryBudget(db.Document):
+    # The amount of the budget.
+    amount = db.DecimalField(precision = 2, required = True)
+
+    # The category.
+    category = db.ReferenceField(Category, required = True)
 
 def loadCategories():
     categories = Category.objects().all()
     return [(c.id, c.name) for c in categories]
+
+def sumEntries():
+    return sum([entry.amount for entry in Entry.objects if entry.amount > 0])
