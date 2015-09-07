@@ -1,0 +1,12 @@
+{% from "helper.html" import renderField %}
+{% extends "layout.html" %}
+
+{% block content %}
+<form method="post" action="{{ url_for('auth.login') }}">
+  <dl>
+    {{ renderField(form.username) }}
+    {{ renderField(form.password) }}
+  </dl>
+  <p><input type="submit" value="Login">
+</form>
+{% endblock %}

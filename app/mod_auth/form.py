@@ -26,3 +26,11 @@ class RegistrationForm(Form):
         validators.EqualTo('passwordConfirm', message='The passwords must be equal.')
         ])
     passwordConfirm = PasswordField('Confirm Password', validators = [])
+
+class LoginForm(Form):
+    username = TextField('Username', validators = [
+        validators.Required()
+        ])
+    password = PasswordField('Password', validators = [
+        validators.Required()
+    ])

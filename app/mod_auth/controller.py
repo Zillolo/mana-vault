@@ -6,7 +6,7 @@ These functions include the following:
 
 from flask import Blueprint, flash, redirect, render_template, request, session, url_for
 
-from app.mod_auth.form import RegistrationForm
+from app.mod_auth.form import LoginForm, RegistrationForm
 from app.mod_auth.helper import requireAuth, generateHash
 from app.mod_auth.model import AuthLevel, User
 
@@ -21,8 +21,6 @@ def register():
     form = RegistrationForm(request.form)
 
     if request.method == 'POST' and form.validate():
-        print("POST called and validated.")
-
         user = User()
         form.populate_obj(user)
         user.password = generateHash(user.password)
@@ -31,6 +29,19 @@ def register():
         flash('Your user account has been created.')
         return redirect(url_for('auth.info'))
     return render_template('auth/registration.html', form = form)
+
+@auth.route('/login', methods = ['GET', 'POST'])
+def login():
+    form = LoginForm(request.form)
+
+    if request.method == 'POST' and form.validate():
+        user = User.objects(username = form.username.data).first()
+        if user is not None:
+            if user.password == generateHash(form.password.data):
+                session['user'] = user
+                return redirect(url_for('auth.info'))
+        flash('The specified username and/or password were incorrect.')
+    return render_template('auth/login.html', form = form)
 
 @auth.route('/info')
 def info():
