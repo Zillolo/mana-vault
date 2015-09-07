@@ -15,14 +15,14 @@ def requireAuth(level = AuthLevel.USER):
             if user is None:
                 return redirect(url_for('auth.login'))
             if user['authLevel'] < level:
-                logger.debug('A user tried to access a higher-level area.')
+                logger.info('A user tried to access a higher-level area.')
                 abort(403)
             return func(*args, **kwargs)
         return update_wrapper(wrapper, func)
     return decorator
 
 def generateHash(password):
-    logger.debug('A hash has been generated.')
+    logger.info('A hash has been generated.')
     return hashlib.sha512(password.encode('utf-8')).hexdigest()
 
 def onAuthRedirect():
