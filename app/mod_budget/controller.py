@@ -3,5 +3,5 @@ from flask import Blueprint
 budget = Blueprint('budget', __name__, template_folder = 'templates')
 
 @budget.route('/')
-def default:
+def default():
     return "Hello World!"
