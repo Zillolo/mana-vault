@@ -1,0 +1,13 @@
+{% from "helper.html" import renderField %}
+{% extends "layout.html" %}
+
+{% block content %}
+<form method="post" action="{{ url_for('budget.addEntry') }}">
+  <dl>
+    {{ renderField(form.amount) }}
+    {{ renderField(form.description) }}
+    {{ renderField(form.category) }}
+  </dl>
+  <p><input type="submit" value="Add Entry">
+</form>
+{% endblock %}
