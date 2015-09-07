@@ -14,7 +14,6 @@ def requireAuth(level = AuthLevel.USER):
             user = session.get('user', None)
             if user is None:
                 return redirect(url_for('auth.login'))
-            print(user)
             if user['authLevel'] < level:
                 abort(403)
             return func(*args, **kwargs)

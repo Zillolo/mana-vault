@@ -1,6 +1,8 @@
 from flask import Flask
 from flask.ext.mongoengine import MongoEngine
 
+import logging
+
 # Start a flask application context.
 app = Flask(__name__)
 
@@ -9,6 +11,10 @@ app.config.from_object('config')
 
 # Setup Db object.
 db = MongoEngine(app)
+
+# Setup logging.
+logging.basicConfig(level = logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Import auth module and register blueprint.
 from app.mod_auth.controller import auth
