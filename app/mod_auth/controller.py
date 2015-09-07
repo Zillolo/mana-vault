@@ -38,6 +38,8 @@ def register():
         user.authLevel = AuthLevel.USER
 
         user.save()
+
+        logger.debug('A user has been added.')
         flash('Your user account has been created.')
         return redirect(url_for('auth.default'))
     return render_template('auth/registration.html', form = form)
@@ -64,6 +66,8 @@ def login():
             if user.password == generateHash(form.password.data):
                 session['user'] = user
                 return redirect(url_for('auth.default'))
+
+        logger.debug('User %s has logged in.' % user.username)
         flash('The specified username and/or password were incorrect.')
     return render_template('auth/login.html', form = form)
 
@@ -76,6 +80,7 @@ def logout():
             authentication-module.
         Should he not be logged in, please see: app.mod_auth.helper.requireAuth
     """
+    logger.debug('User %s has logged out.' % session.get('user').username)
     session.pop('user')
     return redirect(url_for('auth.default'))
 
