@@ -1,0 +1,13 @@
+{% from "helper.html" import renderField %}
+
+<form method="post" action="{{ url_for('auth.register') }}">
+  <dl>
+    {{ renderField(form.username) }}
+    {{ renderField(form.email) }}
+    {{ renderField(form.password) }}
+    {{ renderField(form.passwordConfirm) }}
+    {{ renderField(form.firstName) }}
+    {{ renderField(form.lastName) }}
+  </dl>
+  <p><input type="submit" value="Register">
+</form>

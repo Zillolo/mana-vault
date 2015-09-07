@@ -15,11 +15,9 @@ class User(db.Document):
     firstName = db.StringField(min_length = 2, max_length = 20, required = True)
     lastName = db.StringField(min_length = 2, max_length = 30, required = True)
 
-    birthday = db.DateTimeField(required = True)
-
     # Login credentials
     username = db.StringField(min_length = 4, max_length = 20, required = True)
-    password = db.StringField(min_length = 6, max_length = 30, required = True)
+    password = db.StringField(required = True)
 
     # Email
     email = db.EmailField(required = True)
