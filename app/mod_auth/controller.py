@@ -6,6 +6,7 @@ These functions include the following:
 
 from flask import Blueprint, flash, redirect, render_template, request, session, url_for
 
+from app import logger
 from app.mod_auth.form import LoginForm, RegistrationForm
 from app.mod_auth.helper import onAuthRedirect, requireAuth, generateHash
 from app.mod_auth.model import AuthLevel, User
