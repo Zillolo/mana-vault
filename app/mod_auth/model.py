@@ -1,14 +1,18 @@
-from app import db
-
 from enum import IntEnum
 
+from app import db
+
+"""
+Describes the authentication level of a user as a series of constants.
+IntEnum has been chosen as this provides a nice way to use < and > for permission checking.
+"""
 class AuthLevel(IntEnum):
     UNKNOWN = 0,
     USER = 1,
     ADMIN = 2
 
 """
-A class that represents the user as a MongoEngine document.
+A class that represents the schema of a User as a MongoEngine document.
 """
 class User(db.Document):
     # Personal details

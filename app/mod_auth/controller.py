@@ -14,11 +14,21 @@ auth = Blueprint('auth', __name__, template_folder = 'templates')
 
 @auth.route('/')
 def default():
+    """The default route for the authentication-module.
+    """
     return redirect(url_for('auth.info'))
 
 @auth.route('/register', methods = ['GET', 'POST'])
 @onAuthRedirect()
 def register():
+    """This function allows to register a new user to the system.
+        Upon a GET request a RegistrationForm will be shown to the user.
+        Upon a POST request the form will be validated and if valid the user
+            will get assigned a AuthLevel and his password will be hashed.
+            He will then be added to the database and redirect to the default
+            route of the authentication-module.
+            Should the form be invalid, the user will be shown the form again.
+    """
     form = RegistrationForm(request.form)
 
     if request.method == 'POST' and form.validate():
@@ -35,6 +45,17 @@ def register():
 @auth.route('/login', methods = ['GET', 'POST'])
 @onAuthRedirect()
 def login():
+    """This function logs a user into the system.
+        Upon a GET request a LoginForm will be shown to the user.
+        Upon a POST request the form will be validated and if valid the users
+            specified password will be hashed and compared to the stored
+            password.
+            Should they be equal the user will be logged in (as such
+                his User object will be stored in the session) and redirected to
+                    the default page of the authentication-module.
+                Is this not the case or if the form was invalid in the first
+                    place, he will be shown the form again.
+    """
     form = LoginForm(request.form)
 
     if request.method == 'POST' and form.validate():
@@ -49,6 +70,12 @@ def login():
 @auth.route('/logout')
 @requireAuth()
 def logout():
+    """This function logs a user out of the system.
+        Should the user be logged in, his User object will be poped from the
+            session and he will be redirected to the default page for the
+            authentication-module.
+        Should he not be logged in, please see: app.mod_auth.helper.requireAuth
+    """
     session.pop('user')
     return redirect(url_for('auth.default'))
 
