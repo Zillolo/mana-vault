@@ -4,7 +4,7 @@ from flask import abort, flash, redirect, request, session, url_for
 from functools import update_wrapper
 import hashlib
 
-from app import app
+from app import app, logger
 from app.mod_auth.model import AuthLevel, User
 
 def requireAuth(level = AuthLevel.USER):
