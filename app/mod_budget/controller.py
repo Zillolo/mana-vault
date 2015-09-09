@@ -84,3 +84,20 @@ def addExpense():
         flash('Your expense has been added.')
         return redirect(url_for('budget.default'))
     return render_template('budget/expense/add.html', form = form)
+
+@budget.route('/expense/delete/<id>')
+@requireAuth()
+def deleteExpense(id):
+    # Fetch the appropiate entry from the collection.
+    userId = ObjectId(session.get('user')['_id']['$oid'])
+    expense = Expense.objects(id = ObjectId(id), owner = userId).first()
+    logger.debug('Trying to delete ({0}, {1})'.format(ObjectId(id), userId))
+
+    if expense is not None:
+        logger.debug('Trying to delete expense {0}'.format(expense.id))
+        expense.delete()
+
+        flash('Your entry has been deleted.')
+    else:
+        flash('You are not authorized to delete this entry.')
+    return redirect(url_for('budget.default'))
