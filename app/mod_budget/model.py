@@ -19,12 +19,5 @@ class Entry(db.Document):
     # The category of this entry.
     category = db.ReferenceField(Category, required = True)
 
-class CategoryBudget(db.Document):
-    # The amount of the budget.
-    amount = db.DecimalField(precision = 2, required = True)
-
-    # The category.
-    category = db.ReferenceField(Category, required = True)
-
 def sumEntries():
     return sum([entry.amount for entry in Entry.objects if entry.amount > 0])
