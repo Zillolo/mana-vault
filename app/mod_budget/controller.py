@@ -5,7 +5,7 @@ from bson.objectid import ObjectId
 
 from app import logger
 from app.mod_budget.form import AddEntryForm, EditBudgetForm
-from app.mod_budget.model import Category, CategoryBudget, Expense, Income
+from app.mod_budget.model import Category, Entry
 from app.mod_auth.helper import requireAuth
 from app.mod_auth.model import User
 
@@ -50,9 +50,17 @@ def deleteExpense(id):
         flash('You are not authorized to delete this entry.')
     return redirect(url_for('budget.default'))
 
-@budget.route('/entry/add', methods = ['GET', 'POST'])
+@budget.route('/income/add', methods = ['GET', 'POST'])
 @requireAuth()
-def addEntry(asAsset = False):
+def addIncome():
+    return addEntry('/budget/income/add.html', asAsset = True)
+
+@budget.route('/expense/add', methods = ['GET', 'POST'])
+@requireAuth()
+def addExpense():
+    return addEntry('/budget/expense/add.html', asAsset = False)
+
+def addEntry(template, asAsset = False):
     form = AddEntryForm(request.form)
     # Load the categories from the DB into the SelectField
     form.loadCategories()
@@ -70,7 +78,7 @@ def addEntry(asAsset = False):
         # Insert owner into the ReferenceField.
         userId = ObjectId(session.get('user')['_id']['$oid'])
         entry.owner = User.objects(id = userId).first()
-        ientry.save()
+        entry.save()
 
         logger.debug('{0} added Income({1}, {2}, {3})'.format(
             session.get('user')['username'], entry.amount, entry.description,
@@ -78,4 +86,4 @@ def addEntry(asAsset = False):
 
         flash('Your entry has been added.')
         return redirect(url_for('budget.default'))
-    return render_template('budget/income/add.html', form = form)
+    return render_template(template, form = form)
