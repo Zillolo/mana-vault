@@ -13,7 +13,7 @@ app.config.from_object('config')
 db = MongoEngine(app)
 
 # Setup logging.
-logging.basicConfig(level = logging.INFO)
+logging.basicConfig(level = logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 # Import auth module and register blueprint.
