@@ -26,9 +26,5 @@ class CategoryBudget(db.Document):
     # The category.
     category = db.ReferenceField(Category, required = True)
 
-def loadCategories():
-    categories = Category.objects().all()
-    return [(c.id, c.name) for c in categories]
-
 def sumEntries():
     return sum([entry.amount for entry in Entry.objects if entry.amount > 0])
