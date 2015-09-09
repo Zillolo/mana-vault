@@ -4,8 +4,7 @@ from bson.objectid import ObjectId
 
 from app import logger
 from app.mod_budget.form import AddEntryForm, EditBudgetForm
-from app.mod_budget.model import Category, CategoryBudget, Entry, loadCategories, sumEntries
-
+from app.mod_budget.model import Category, CategoryBudget, Expense, Income
 from app.mod_auth.helper import requireAuth
 
 budget = Blueprint('budget', __name__, template_folder = 'templates')
@@ -15,26 +14,24 @@ budget = Blueprint('budget', __name__, template_folder = 'templates')
 def default():
     return "Hello World!"
 
-@budget.route('/entry/add', methods = ['GET', 'POST'])
+@budget.route('/income/add', methods = ['GET', 'POST'])
 @requireAuth()
-def addEntry():
+def addIncome():
     form = AddEntryForm(request.form)
-    # Load the categories from the db into the SelectField
-    form.category.choices = loadCategories()
+    # Load the categories from the DB into the SelectField
+    form.loadCategories()
 
     if request.method == 'POST' and form.validate():
-        entry = Entry()
-        form.populate_obj(entry)
+        income = Income()
+        form.populate_obj(income)
 
-        logger.debug(form.category.data)
-        # Insert category into reference field.
-        entry.category = Category.objects(id = ObjectId(entry.category)).first()
+        # Insert category into the ReferenceField.
+        income.category = Category.objects(id = ObjectId(income.category)).first()
+        income.save()
 
-        entry.save()
-        logger.info('A new entry has been saved.')
-        flash('Your entry has been added.')
+        flash('Your income has been added.')
         return redirect(url_for('budget.default'))
-    return render_template('budget/entry/add.html', form = form)
+    return render_template('budget/income/add.html', form = form)
 
 @budget.route('/edit', methods = ['GET', 'POST'])
 @requireAuth()
