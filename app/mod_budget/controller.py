@@ -1,4 +1,5 @@
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import Blueprint, flash, redirect, render_template, request, session, \
+    url_for
 from wtforms.fields.html5 import DecimalRangeField
 from bson.objectid import ObjectId
 
@@ -6,6 +7,7 @@ from app import logger
 from app.mod_budget.form import AddEntryForm, EditBudgetForm
 from app.mod_budget.model import Category, CategoryBudget, Expense, Income
 from app.mod_auth.helper import requireAuth
+from app.mod_auth.model import User
 
 budget = Blueprint('budget', __name__, template_folder = 'templates')
 
@@ -27,6 +29,9 @@ def addIncome():
 
         # Insert category into the ReferenceField.
         income.category = Category.objects(id = ObjectId(income.category)).first()
+        # Insert owner into the ReferenceField.
+        userId = ObjectId(session.get('user')['_id']['$oid'])
+        income.owner = User.objects(id = userId).first()
         income.save()
 
         flash('Your income has been added.')
@@ -46,6 +51,9 @@ def addExpense():
 
         # Insert category into the ReferenceField.
         expense.category = Category.objects(id = ObjectId(expense.category)).first()
+        # Insert owner into the ReferenceField.
+        userId = ObjectId(session.get('user')['_id']['$oid'])
+        income.owner = User.objects(id = userId).first()
         expense.save()
 
         flash('Your income has been added.')
