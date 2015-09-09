@@ -61,8 +61,8 @@ def addExpense():
         expense.save()
 
         logger.debug('{0} added Income({1}, {2}, {3})'.format(
-            session.get('user')['username'], income.amount, income.description,
-                income.category.name))
+            session.get('user')['username'], expense.amount, expense.description,
+                expense.category.name))
 
         flash('Your expense has been added.')
         return redirect(url_for('budget.default'))
