@@ -16,40 +16,6 @@ budget = Blueprint('budget', __name__, template_folder = 'templates')
 def default():
     return "Hello World!"
 
-@budget.route('/income/delete/<id>')
-@requireAuth()
-def deleteIncome(id):
-    # Fetch the appropiate entry from the collection.
-    userId = ObjectId(session.get('user')['_id']['$oid'])
-    income = Income.objects(id = ObjectId(id), owner = userId).first()
-    logger.debug('Trying to delete ({0}, {1})'.format(ObjectId(id), userId))
-
-    if income is not None:
-        logger.debug('Trying to delete income {0}'.format(income.id))
-        income.delete()
-
-        flash('Your entry has been deleted.')
-    else:
-        flash('You are not authorized to delete this entry.')
-    return redirect(url_for('budget.default'))
-
-@budget.route('/expense/delete/<id>')
-@requireAuth()
-def deleteExpense(id):
-    # Fetch the appropiate entry from the collection.
-    userId = ObjectId(session.get('user')['_id']['$oid'])
-    expense = Expense.objects(id = ObjectId(id), owner = userId).first()
-    logger.debug('Trying to delete ({0}, {1})'.format(ObjectId(id), userId))
-
-    if expense is not None:
-        logger.debug('Trying to delete expense {0}'.format(expense.id))
-        expense.delete()
-
-        flash('Your entry has been deleted.')
-    else:
-        flash('You are not authorized to delete this entry.')
-    return redirect(url_for('budget.default'))
-
 @budget.route('/income/add', methods = ['GET', 'POST'])
 @requireAuth()
 def addIncome():
@@ -87,3 +53,20 @@ def addEntry(template, asAsset = False):
         flash('Your entry has been added.')
         return redirect(url_for('budget.default'))
     return render_template(template, form = form)
+
+@budget.route('/entry/delete/<id>')
+@requireAuth()
+def deleteEntry(id):
+    # Fetch the appropiate entry from the collection.
+    userId = ObjectId(session.get('user')['_id']['$oid'])
+    expense = Entry.objects(id = ObjectId(id), owner = userId).first()
+    logger.debug('Trying to delete ({0}, {1})'.format(ObjectId(id), userId))
+
+    if expense is not None:
+        logger.debug('Trying to delete expense {0}'.format(expense.id))
+        expense.delete()
+
+        flash('Your entry has been deleted.')
+    else:
+        flash('You are not authorized to delete this entry.')
+    return redirect(url_for('budget.default'))
