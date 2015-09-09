@@ -36,7 +36,7 @@ def addIncome():
 
         logger.debug('{0} added Income({1}, {2}, {3})'.format(
             session.get('user')['username'], income.amount, income.description,
-                income.category))
+                income.category.name))
 
         flash('Your income has been added.')
         return redirect(url_for('budget.default'))
@@ -59,6 +59,10 @@ def addExpense():
         userId = ObjectId(session.get('user')['_id']['$oid'])
         income.owner = User.objects(id = userId).first()
         expense.save()
+
+        logger.debug('{0} added Income({1}, {2}, {3})'.format(
+            session.get('user')['username'], income.amount, income.description,
+                income.category.name))
 
         flash('Your income has been added.')
         return redirect(url_for('budget.default'))
