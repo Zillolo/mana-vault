@@ -57,7 +57,7 @@ def addExpense():
         expense.category = Category.objects(id = ObjectId(expense.category)).first()
         # Insert owner into the ReferenceField.
         userId = ObjectId(session.get('user')['_id']['$oid'])
-        income.owner = User.objects(id = userId).first()
+        expense.owner = User.objects(id = userId).first()
         expense.save()
 
         logger.debug('{0} added Income({1}, {2}, {3})'.format(
