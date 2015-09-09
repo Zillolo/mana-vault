@@ -33,6 +33,21 @@ def addIncome():
         return redirect(url_for('budget.default'))
     return render_template('budget/income/add.html', form = form)
 
-@budget.route('/edit', methods = ['GET', 'POST'])
+@budget.route('/expense/add', methods = ['GET', 'POST'])
 @requireAuth()
-def editBudget():
+def addExpense():
+    form = AddEntryForm(request.form)
+    # Load the categories from the DB into the SelectField
+    form.loadCategories()
+
+    if request.method == 'POST' and form.validate():
+        expense = Expense()
+        form.populate_obj(expense)
+
+        # Insert category into the ReferenceField.
+        expense.category = Category.objects(id = ObjectId(expense.category)).first()
+        expense.save()
+
+        flash('Your income has been added.')
+        return redirect(url_for('budget.default'))
+    return render_template('budget/expense/add.html', form = form)
