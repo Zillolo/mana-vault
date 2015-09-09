@@ -3,7 +3,7 @@
 
 {% block content %}
 <h2>Add an Income</h2>
-<form method="post" action="{{ url_for('budget.addEntry', asAsset = True) }}">
+<form method="post" action="{{ url_for('budget.addIncome') }}">
   <dl>
     {{ renderField(form.amount) }}
     {{ renderField(form.description) }}
