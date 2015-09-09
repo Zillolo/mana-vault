@@ -64,6 +64,6 @@ def addExpense():
             session.get('user')['username'], income.amount, income.description,
                 income.category.name))
 
-        flash('Your income has been added.')
+        flash('Your expense has been added.')
         return redirect(url_for('budget.default'))
     return render_template('budget/expense/add.html', form = form)
