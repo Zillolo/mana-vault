@@ -42,6 +42,23 @@ def addIncome():
         return redirect(url_for('budget.default'))
     return render_template('budget/income/add.html', form = form)
 
+@budget.route('/income/delete/<id>')
+@requireAuth()
+def deleteIncome(id):
+    # Fetch the appropiate entry from the collection.
+    userId = ObjectId(session.get('user')['_id']['$oid'])
+    income = Income.objects(id = ObjectId(id), owner = userId).first()
+    logger.debug('Trying to delete ({0}, {1})'.format(ObjectId(id), userId))
+
+    if income is not None:
+        logger.debug('Trying to delete income {0}'.format(income.id))
+        income.delete()
+
+        flash('Your entry has been deleted.')
+    else:
+        flash('You are not authorized to delete this entry.')
+    return redirect(url_for('budget.default'))
+
 @budget.route('/expense/add', methods = ['GET', 'POST'])
 @requireAuth()
 def addExpense():
