@@ -42,7 +42,7 @@ def register():
 
         logger.info('A user has been added.')
         flash('Your user account has been created.')
-        return redirect(url_for('budget.showSummary'))
+        return redirect(url_for('auth.login'))
     return render_template('auth/registration.html', form = form)
 
 @auth.route('/login', methods = ['GET', 'POST'])
@@ -66,7 +66,7 @@ def login():
         if user is not None:
             if user.password == generateHash(form.password.data):
                 session['user'] = user
-                return redirect(session.get('next', url_for('auth.info')))
+                return redirect(session.get('next', url_for('budget.showSummary')))
 
         logger.info('User %s has logged in.' % user.username)
         flash('The specified username and/or password were incorrect.')
@@ -83,7 +83,7 @@ def logout():
     """
     logger.info('User %s has logged out.' % session.get('user')['username'])
     session.pop('user')
-    return redirect(url_for('auth.default'))
+    return redirect(url_for('budget.showSummary'))
 
 @auth.route('/info')
 @requireAuth()
