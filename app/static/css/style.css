@@ -3,6 +3,10 @@ body {
   font-size: 18px;
 }
 
+.progress {
+  width: 300px;
+}
+
 span.entry-positive {
   color: #00FF00;
 }

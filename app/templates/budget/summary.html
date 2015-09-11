@@ -3,18 +3,31 @@
 
 {% block content %}
 <h2>Summary</h2>
-<b>Available Funds: {{ sumIncome }}</b>
+<b>Available Funds: {{ sumIncome }}{{session.get('currency', '€')}}</b>
 <br />
 {% for name, value in expensePerCategory.items() %}
-  <b>{{ name }}</b> {{ value }}
+  <b>{{ name }}</b>
+  <b>{{ value }}{{session.get('currency', '€')}}</b>
   {% if sumIncome != 0 %}
-    {{(value / sumIncome) * 100}}%
+    {% set percent = (value / sumIncome) * 100 %}
   {% else %}
-    -%
+    {% set percent = 0 %}
   {% endif %}
+  <div class="progress">
+    <div class="progress-bar" role="progressbar" aria-valuenow="{{percent|int}}" aria-valuemin="0" aria-valuemax="100" style="width: {{3 * (percent|int) }}px">
+        {{percent|int}}%
+    </div>
+  </div>
+
   <br />
 {% endfor %}
-<table>
+<table class="table table-hover">
+  <tr>
+    <th>ID</th>
+    <th>Amount</th>
+    <th>Description</th>
+    <th>Category</th>
+  </tr>
 {% for entry in entries %}
   <tr>
     <td>{{entry['_id']}}</td>
