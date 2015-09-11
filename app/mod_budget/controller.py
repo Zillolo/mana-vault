@@ -70,3 +70,28 @@ def deleteEntry(id):
     else:
         flash('You are not authorized to delete this entry.')
     return redirect(url_for('budget.default'))
+
+@budget.route('/summary')
+@requireAuth()
+def showSummary():
+    # Get the sum of all assets the user added.
+    userId = ObjectId(session.get('user')['_id']['$oid'])
+    assetSum = sum([entry.amount for entry in Entry.objects(owner = userId).all()
+        if entry.amount > 0])
+
+    expensePerCategory = {}
+    for category in Category.objects().all():
+        expensePerCategory.update({category.name : 0})
+
+    for entry in Entry.objects(owner = userId).all():
+        categoryName = Category.objects(id = entry.category.id).first().name
+        if entry.amount < 0:
+            expensePerCategory[categoryName] = expensePerCategory[categoryName] - \
+                entry.amount
+
+    expenseSum = 0
+    for _, amount in expensePerCategory.items():
+        expenseSum = expenseSum + amount
+
+    return render_template('/budget/summary.html', total = assetSum, expenseSum = expenseSum,
+        expensePerCategory = expensePerCategory)
