@@ -3,16 +3,32 @@
 
 {% block content %}
 <h2>Summary</h2>
-<b>Total: {{ total }}</b>
+<b>Available Funds: {{ sumIncome }}</b>
 <br />
 {% for name, value in expensePerCategory.items() %}
   <b>{{ name }}</b> {{ value }}
-  {% if total != 0 %}
-    {{(value / total) * 100}}%
+  {% if sumIncome != 0 %}
+    {{(value / sumIncome) * 100}}%
   {% else %}
     -%
   {% endif %}
   <br />
 {% endfor %}
-<b>Remaining: {{total - expenseSum}}€</b>
+<table>
+{% for entry in entries %}
+  <tr>
+    <td>{{entry['_id']}}</td>
+    <td>
+    {% if entry['amount'] > 0 %}
+      <span class="entry-positive">
+    {% else %}
+      <span class="entry-negative">
+    {% endif %}
+    {{entry['amount']}}</span></td>
+
+    <td>{{entry['description']}}</td>
+    <td>{{entry['category']}}</td>
+  </tr>
+{% endfor %}
+</table>
 {% endblock %}
