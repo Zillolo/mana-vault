@@ -116,7 +116,7 @@ def showSummary():
             sumIncome = sumIncome + e['amount']
         else:
             expensePerCategory[e['category']] = \
-                expensePerCategory[e['category']] + e['amount']
+                expensePerCategory[e['category']] - e['amount']
 
 
     return render_template('/budget/summary.html',

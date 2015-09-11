@@ -66,6 +66,7 @@ def login():
         if user is not None:
             if user.password == generateHash(form.password.data):
                 session['user'] = user
+                session['currency'] = '€'
                 return redirect(session.get('next', url_for('budget.showSummary')))
 
         logger.info('User %s has logged in.' % user.username)
