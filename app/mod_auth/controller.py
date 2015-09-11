@@ -81,7 +81,7 @@ def logout():
             authentication-module.
         Should he not be logged in, please see: app.mod_auth.helper.requireAuth
     """
-    logger.info('User %s has logged out.' % session.get('user').username)
+    logger.info('User %s has logged out.' % session.get('user')['username'])
     session.pop('user')
     return redirect(url_for('auth.default'))
 
