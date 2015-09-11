@@ -1,0 +1,18 @@
+{% from "helper.html" import renderField %}
+{% extends "layout.html" %}
+
+{% block content %}
+<h2>Summary</h2>
+<b>Total: {{ total }}</b>
+<br />
+{% for name, value in expensePerCategory.items() %}
+  <b>{{ name }}</b> {{ value }}
+  {% if total != 0 %}
+    {{(value / total) * 100}}%
+  {% else %}
+    -%
+  {% endif %}
+  <br />
+{% endfor %}
+<b>Remaining: {{total - expenseSum}}€</b>
+{% endblock %}
