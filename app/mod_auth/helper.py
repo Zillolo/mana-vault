@@ -31,6 +31,9 @@ def requireAuth(level = AuthLevel.USER):
         def wrapper(*args, **kwargs):
             user = session.get('user', None)
             if user is None:
+                session['next'] = request.path
+                logger.debug('Next: {0}'.format(session.get('next')))
+
                 return redirect(url_for('auth.login'))
             if user['authLevel'] < level:
                 logger.info('A user tried to access a higher-level area.')

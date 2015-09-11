@@ -66,7 +66,7 @@ def login():
         if user is not None:
             if user.password == generateHash(form.password.data):
                 session['user'] = user
-                return redirect(url_for('auth.default'))
+                return redirect(session.get('next', url_for('auth.info')))
 
         logger.info('User %s has logged in.' % user.username)
         flash('The specified username and/or password were incorrect.')
@@ -86,5 +86,6 @@ def logout():
     return redirect(url_for('auth.default'))
 
 @auth.route('/info')
+@requireAuth()
 def info():
     return "This is a test."
