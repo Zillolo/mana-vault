@@ -42,7 +42,7 @@ def register():
 
         logger.info('A user has been added.')
         flash('Your user account has been created.')
-        return redirect(url_for('auth.default'))
+        return redirect(url_for('budget.showSummary'))
     return render_template('auth/registration.html', form = form)
 
 @auth.route('/login', methods = ['GET', 'POST'])
