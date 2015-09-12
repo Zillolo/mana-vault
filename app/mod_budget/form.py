@@ -9,7 +9,7 @@ class AddEntryForm(Form):
     amount = DecimalField('Amount', places = 2, validators = [validators.Required()])
     description = TextField('Description', validators = [validators.Required()])
 
-    category = SelectField(coerce = ObjectId)
+    category = SelectField(coerce = ObjectId, validators = [validators.Optional()])
 
     def loadCategories(self):
         self.category.choices = [(c.id, c.name) for c in Category.objects().all()]

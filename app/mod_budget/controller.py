@@ -19,6 +19,7 @@ def default():
 @budget.route('/income/add', methods = ['GET', 'POST'])
 @requireAuth()
 def addIncome():
+    logger.debug('addIncome has been called.')
     return addEntry('/budget/income/add.html', asAsset = True)
 
 @budget.route('/expense/add', methods = ['GET', 'POST'])
@@ -31,16 +32,25 @@ def addEntry(template, asAsset = False):
     # Load the categories from the DB into the SelectField
     form.loadCategories()
 
+    logger.debug('addEntry has been called.')
+
     if request.method == 'POST' and form.validate():
+        logger.debug('A form has been submitted to addEntry.')
+
         entry = Entry()
+        logger.debug('Trying to populate form.')
         form.populate_obj(entry)
 
+        logger.debug('Entry: {0}, {1}, {2}'.format(entry.amount, entry.description, entry.category))
+
         # If this is an expense, multiply the amount by (-1).
+        # And also add a category to it.
         if not asAsset:
             entry.amount = entry.amount * (-1)
+            entry.category = Category.objects(id = ObjectId(entry.category)).first()
+        else:
+            entry.category = Category.objects(name = 'None').first()
 
-        # Insert category into the ReferenceField.
-        entry.category = Category.objects(id = ObjectId(entry.category)).first()
         # Insert owner into the ReferenceField.
         userId = ObjectId(session.get('user')['_id']['$oid'])
         entry.owner = User.objects(id = userId).first()
@@ -74,29 +84,6 @@ def deleteEntry(id):
 @budget.route('/summary')
 @requireAuth()
 def showSummary():
-    # # Get the sum of all assets the user added.
-    # userId = ObjectId(session.get('user')['_id']['$oid'])
-    # assetSum = sum([entry.amount for entry in Entry.objects(owner = userId).all()
-    #     if entry.amount > 0])
-    #
-    # expensePerCategory = {}
-    # for category in Category.objects().all():
-    #     expensePerCategory.update({category.name : 0})
-    #
-    # for entry in Entry.objects(owner = userId).all():
-    #     categoryName = Category.objects(id = entry.category.id).first().name
-    #     if entry.amount < 0:
-    #         expensePerCategory[categoryName] = expensePerCategory[categoryName] - \
-    #             entry.amount
-    #
-    # expenseSum = 0
-    # for _, amount in expensePerCategory.items():
-    #     expenseSum = expenseSum + amount
-    #
-    # return render_template('/budget/summary.html', total = assetSum, expenseSum = expenseSum,
-    #     expensePerCategory = expensePerCategory)
-
-    # Load all entries of the current user into a list.
     entries = []
 
     sumIncome = 0
@@ -108,8 +95,14 @@ def showSummary():
     userId = ObjectId(session.get('user')['_id']['$oid'])
     for entry in Entry.objects(owner = userId).all():
         e = {'_id' : entry.id, 'amount' : entry.amount,
-            'description' : entry.description,
-                'category' : Category.objects(id = entry.category.id).first().name}
+            'description' : entry.description }
+
+        # Check if the entry has a category.
+        if entry.category is not None:
+            e.update({'category' : Category.objects(id = entry.category.id).first().name})
+        else:
+            e.update({'category' : '-'})
+
         entries.append(e)
 
         if e['amount'] > 0:
