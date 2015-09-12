@@ -3,11 +3,11 @@
 
 {% block content %}
 <h2>Summary</h2>
-<b>Available Funds: {{ sumIncome }}{{session.get('currency', '€')}}</b>
+<b>Available Funds: {{ sumIncome }}{{session.get('currency')}}</b>
 <br />
 {% for name, value in expensePerCategory.items() %}
   <b>{{ name }}</b>
-  <b>{{ value }}{{session.get('currency', '€')}}</b>
+  <b>{{ value }}{{session.get('currency')}}</b>
   {% if sumIncome != 0 %}
     {% set percent = (value / sumIncome) * 100 %}
   {% else %}

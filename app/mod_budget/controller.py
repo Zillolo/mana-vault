@@ -119,6 +119,8 @@ def showSummary():
                 expensePerCategory[e['category']] - e['amount']
 
 
+    logger.debug('Currency: {0}'.format(session.get('currency')))
+
     return render_template('/budget/summary.html',
         entries = entries, sumIncome = sumIncome,
             expensePerCategory = expensePerCategory)
