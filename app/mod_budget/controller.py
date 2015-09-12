@@ -14,7 +14,7 @@ budget = Blueprint('budget', __name__, template_folder = 'templates')
 @budget.route('/')
 @requireAuth()
 def default():
-    return "Hello World!"
+    return redirect(url_for('budget.showSummary'))
 
 @budget.route('/income/add', methods = ['GET', 'POST'])
 @requireAuth()
