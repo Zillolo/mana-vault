@@ -17,4 +17,4 @@ class Entry(db.Document):
     owner = db.ReferenceField(User, reverse_delete_rule = db.CASCADE, required = True)
 
     # The category of this entry.
-    category = db.ReferenceField(Category, required = True)
+    category = db.ReferenceField(Category)
