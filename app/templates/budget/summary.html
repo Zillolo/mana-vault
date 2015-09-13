@@ -2,32 +2,50 @@
 {% extends "layout.html" %}
 
 {% block content %}
+{% set currency = session.get('currency') %}
 <h2>Summary</h2>
-<b>Available Funds: {{ sumIncome }}{{session.get('currency')}}</b>
+<b>Available Funds: {{ sumIncome }}{{ currency }}</b>
 <br />
-{% for name, value in expensePerCategory.items() %}
-  <b>{{ name }}</b>
-  <b>{{ value }}{{session.get('currency')}}</b>
-  {% if sumIncome != 0 %}
-    {% set percent = (value / sumIncome) * 100 %}
-  {% else %}
-    {% set percent = 0 %}
-  {% endif %}
-  <div class="progress">
-    <div class="progress-bar" role="progressbar" aria-valuenow="{{percent|int}}" aria-valuemin="0" aria-valuemax="100" style="width: {{3 * (percent|int) }}px">
-        {{percent|int}}%
-    </div>
-  </div>
+<br />
+<h3>Expenses per category</h3>
+<table class="table">
+  <thead>
+    <tr>
+      <th style="font-weight: bold;">Category</th>
+      <th></th>
+      <th style="font-weight: bold;">Amount({{ currency }})</th>
+    </tr>
+  </thead>
+  {% for name, amount in expensePerCategory.items() %}
+    <tr>
+      <td>{{ name }}</td>
+      <td>{% if sumIncome != 0 %}
+            {% set percent = (amount / sumIncome) * 100 %}
+          {% else %}
+            {% set percent = 0 %}
+          {% endif %}
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" aria-valuenow="{{percent|int}}" aria-valuemin="0" aria-valuemax="100" style="width: {{7 * (percent|int) }}px">
+              {{percent|int}}%
+          </div>
+        </div>
+      </td>
+      <td>{{ amount }}</td>
+    </tr>
+  {% endfor %}
+</table>
 
-  <br />
-{% endfor %}
+<h3>All entries</h3>
 <table class="table table-hover">
-  <tr>
-    <th>ID</th>
-    <th>Amount</th>
-    <th>Description</th>
-    <th>Category</th>
-  </tr>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Amount</th>
+      <th>Description</th>
+      <th>Category</th>
+      <th>Action</th>
+    </tr>
+  </thead>
 {% for entry in entries %}
   <tr>
     <td>{{entry['_id']}}</td>
@@ -41,6 +59,7 @@
 
     <td>{{entry['description']}}</td>
     <td>{{entry['category']}}</td>
+    <td><a href="{{url_for('budget.deleteEntry', id = entry['_id'])}}">Delete</a></td>
   </tr>
 {% endfor %}
 </table>
